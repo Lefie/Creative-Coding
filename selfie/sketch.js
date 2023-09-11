@@ -5,6 +5,20 @@ function setup() {
    background(255,250,205);
 
 
+   //random shapes as background
+fill(255,192,203);
+
+beginShape();
+vertex(80, 100);
+vertex(400, 140);
+vertex(120, 310);
+vertex(180,220);
+endShape(CLOSE)
+
+fill(124,252,0,120)
+ellipse(430, 140, 80, 80);
+
+
    //hair
    fill(0)
    ellipse(330,420,200,350);
@@ -27,8 +41,16 @@ function setup() {
 
  
    //eyebrows
-   leftEyeBrow();
-   rightEyeBrow();
+   stroke(41)
+   strokeWeight(2)
+   noFill()
+   arc(250, 355, 30, 30, PI, PI+HALF_PI+HALF_PI);
+
+   //right eye brows
+   stroke(41)
+   strokeWeight(2)
+   noFill()
+   arc(350, 355, 30, 30, PI, PI+HALF_PI+HALF_PI);
 
    //left eye
    strokeWeight(1)
@@ -66,32 +88,29 @@ noStroke();
 fill(240, 211, 192);
 rect(260,500,80,70,20);
 
-   //shirt
-   fill(135, 206, 235); //shirt color
-   rect(165,550,280,360,60); // shirt 
+//stroke
+stroke(21);
+strokeWeight(21);
+stroke(240, 211, 192);
 
+//dress
+fill(135, 206, 235); //shirt color
+rect(165,550,280,360,60); // shirt 
+
+
+//  stroke(51);
+fill(240, 211, 192); //triangle 
+triangle(260,550,340,550,300,600); //upside triangle collar
 
    
 
-  //  stroke(51);
-   fill(240, 211, 192); //triangle 
-   triangle(260,550,340,550,300,600); //upside triangle collar
+   
 
 
 
 }
 
-function rightEyeBrow(){
-   stroke(41)
-   strokeWeight(2)
-   noFill()
-   arc(350, 355, 30, 30, PI, PI+HALF_PI+HALF_PI);
-}
 
-function leftEyeBrow(){
-  stroke(41)
-  strokeWeight(2)
-  noFill()
-  arc(250, 355, 30, 30, PI, PI+HALF_PI+HALF_PI);
-}
+
+
 
