@@ -10,8 +10,8 @@ let scaleFactor = 1;
 
 function setup(){
   createCanvas(500,500);
-  background(0);
-
+  
+  noStroke();
   
 
 
@@ -22,7 +22,7 @@ function setup(){
 
 function draw(){
 
-  background(0)
+  background(0,10)
 
   fill("yellow");
   rect(225,220,50,50);
@@ -41,16 +41,21 @@ function draw(){
   arc(245,40,150,80,PI,TWO_PI)
   
 
-  fill("white")
+
   
   translate(width/2, height/2);
   scale(scaleFactor)
+ 
+  fill(random(255),200,128)
+  ellipse(0,0,30)
+
+    fill("white")
   ellipse(ballX,ballY,20,20);
   ballY += speedY;
   scaleFactor += 0.01;
 
  
-
+ 
   if(ballY >= 100){
     speedY = speedY * -1.1;
   }
@@ -61,6 +66,7 @@ function draw(){
   }
 
   speedY = constrain(speedY,-8,8)
+  
   
 
 }
