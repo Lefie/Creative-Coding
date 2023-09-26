@@ -1,3 +1,15 @@
+/*
+rules :
+this application generates random points in the coordinate system
+at which random shapes will be drawn. it also generates random 
+colors and sizes for the shapes.
+
+as a user, you can use mouse to hover over the drawing to erase 
+shapes. 
+
+
+*/
+
 
 let count = 0; //count the total num of shapes we have
 
