@@ -85,8 +85,6 @@ class Snowflake{
 }
 
 
-
-
 function setup() {
   createCanvas(500, 500);
   background(0)
@@ -107,13 +105,7 @@ function draw() {
   let b = map(mouseX,0,200,250,200);
   background(color(r,g,b))
   
-  //text
-  text("jkds" + mouseX + " " + mouseY,80,120)
-  noStroke();
-  
-  
- 
-  
+
   
   if(mouseX <=250){
      noStroke()
@@ -143,10 +135,12 @@ function draw() {
       flake.move();
     }
   
+    
     bird.display()
     bird.move();
     
   }
+  
   
   
   //progress bar 
@@ -169,6 +163,11 @@ function draw() {
    if(progressX < 185){
     progressX+= r1
   }
+  
+  fill("white")
+  text("almost there...",50,220)
+  
+  
   
   //circle1
   stop+=PI/120;
