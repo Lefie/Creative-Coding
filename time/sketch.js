@@ -108,16 +108,17 @@ function setup() {
 
 function draw() {
   
-  let s = second();
+  let h = hour();
   
   
-  let r = map(s,0,60,20,20);
-  let g = map(s,0,60,140,30);
-  let b = map(s,0,60,200,130);
+  let r = map(h,0,24,20,20);
+  let g = map(h,0,24,140,30);
+  let b = map(h,0,24,200,130);
   background(color(r,g,b))
   
   
-  if(s <=30){
+  //day 
+  if(h >= 6 && h < 18){
      noStroke()
     fill("yellow")
     ellipse(0,0,180,180)
@@ -130,7 +131,8 @@ function draw() {
   }
  
   
-  if(s > 30){
+  //night
+  if((h >=18 && h <= 23) || (h >= 0 && h < 6)){
     noStroke()
     
     fill(246, 241, 213)
