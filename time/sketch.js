@@ -44,7 +44,7 @@ class Bird{
   
   move(){
     if(this.headX <= 500){
-         this.headX += 1
+         this.headX += 2
     }else{
       this.headX = 0;
       this.headY = random(50,450)
@@ -100,14 +100,17 @@ function setup() {
 }
 
 function draw() {
-  let r = map(mouseX,0,200,100,50);
-  let g = map(mouseX,0,200,200,100);
-  let b = map(mouseX,0,200,250,200);
+  
+  let s = second();
+  
+  
+  let r = map(s,0,60,20,20);
+  let g = map(s,0,60,140,30);
+  let b = map(s,0,60,200,130);
   background(color(r,g,b))
   
-
   
-  if(mouseX <=250){
+  if(s <=30){
      noStroke()
     fill("yellow")
     ellipse(0,0,180,180)
@@ -120,7 +123,7 @@ function draw() {
   }
  
   
-  if(mouseX > 250){
+  if(s > 30){
     noStroke()
     
     fill(246, 241, 213)
@@ -142,7 +145,7 @@ function draw() {
   }
   
   
-  
+
   //progress bar 
   strokeWeight(10)
   stroke("white")
