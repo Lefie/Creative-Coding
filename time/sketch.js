@@ -23,6 +23,7 @@ class Bird{
     this.headX = headX
     this.headY = headY;
     this.color1 = color1;
+    this.text = "bird"
     
     
     
@@ -35,11 +36,17 @@ class Bird{
     //head
     ellipse(this.headX,this.headY,30);
     
+ 
     //body
      ellipse(this.headX-30,this.headY,50,20);
     
+    
      //mouth
   triangle(this.headX + 10,this.headY - 8,this.headX + 10,this.headY +5, this.headX + 20,this.headY+2)
+    
+       //text
+    fill("white")
+    text(this.text,this.headX-20,this.headY+5)
   }
   
   move(){
