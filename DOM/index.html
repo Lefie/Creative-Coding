@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sketch</title>
+
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+    <script src="libraries/p5.min.js"></script>
+    <script src="libraries/p5.sound.min.js"></script>
+  </head>
+
+  <body>
+    <div class="box">
+    <div id="container">
+
+    </div>
+
+    <div id="control">
+      <button onClick="randomizeSpeed();">
+        Randomize Speed 
+     </button>
+
+     <div class="slider-box">
+      <div class="color">
+        <p>Red</p>
+        <input type="range" min="0" max="255" value="0" class="slider" id="r">  
+      </div>
+      <div class="color">
+        <p>Green</p>
+        <input type="range" min="0" max="255" value="0" class="slider" id="g">  
+      </div>
+      <div class="color">
+        <p>Blue</p>
+        <input type="range" min="0" max="255" value="0" class="slider" id="b">  
+      </div>
+     </div>
+     
+    </div>
+  </div>
+
+
+    <script src="sketch.js"></script>
+  </body>
+</html>
