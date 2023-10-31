@@ -33,12 +33,15 @@ function setup(){
   console.log(random_emoji)
   console.log(rand_animals)
   console.log("HJSABSA"+ rand_animals[0].name + " ")
+  let p = createP("some text:"+random_emoji.htmlCode[0])
+  p.position(100,500)
   
 }
 
 function draw(){
   
-  background(100)
+  background(200)
+
  
   fill("white")
   text("name: " + random_emoji.name,20,20)
