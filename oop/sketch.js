@@ -5,25 +5,10 @@ let xSpeed = 1;
 
 function setup(){
 
-  
    createCanvas(800,500)
    background(128)
 
    bus = new Bus(200,200);
-   
-
-   
-
-   // fill("pink")
-   // rect(200,250,170,80)
-   // fill("black")
-   // ellipse(240,330,50,50)
-   // ellipse(330,330,50,50)
-   
-   // fill("pink")
-   // rect(500,400,170,80)
-   // ellipse(540,480,50,50)
-   
 
 }
 
@@ -34,13 +19,6 @@ function draw(){
    background(128)
    bus.display()
    bus.move()
-
-
-      
-
-   
- 
-  
 
 }
 

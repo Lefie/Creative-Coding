@@ -9,9 +9,9 @@ let sentence = "I love watermelons"
 
 let dict = {};
 
-
-
 let input
+
+let freq = {}
 
 
 
@@ -40,10 +40,7 @@ function setup(){
         dict[allEmojis[i].name] = i
     }
 
-   
 
-   
-    
 
 }
 
@@ -57,11 +54,14 @@ function draw(){
 
     replacedText = replaceWordsWithEmojis(userInput, dict);
     textSize(20)
-    if (mouseX && mouseY) {
-        text(replacedText, 100, 300);
-    }
+  
+    text(replacedText, 100, 300);
 
+   
 
+    //"U+1F98B".substring(2) === replacedText.codePointAt(0).toString(16).toUpperCase()
+    
+   
 }
 
 function replaceWordsWithEmojis(text, emojiData) {
@@ -90,7 +90,7 @@ function replaceWordsWithEmojis(text, emojiData) {
 function findPartialMatch(word, emojiData) {
     // Iterate through the emoji data and check for partial matches
     for (const key in emojiData) {
-        
+
         if (emojiData.hasOwnProperty(key)) {
 
           if (key.includes(word)) {
