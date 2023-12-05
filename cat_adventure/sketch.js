@@ -24,16 +24,52 @@ function preload(){
 function setup(){
     createCanvas(640,500)
     cat = new Cat(height/2, width/2)
+    noStroke()
+
     
 
 }
 
 function draw(){
-    background(128)
+    background(248,131,121)
+    if(gameState == 0){ // the default map 
+        text("Game 1",230,90)
+        rect(200,100,100,100)
+  
+        if(dist(cat.x,cat.y,200,100) < 10){
+            fill(128)
+            rect(200,100,100,100)
+        }else{
+            fill(255)
+            rect(200,100,100,100)
+        }
+    }
+
+    //if game state is 1 : we enter into mini game1
+
+    //if game state is 1 : we enter into mini game2
+
+    //if game state is 1 : we enter into mini game3
+
+    //if game state is 1 : we enter into mini game4
+
+    
     cat.display()
     cat.move()
+
+   
+   
+    
 }
 
+
+//function 1: mini game 1
+
+// function 2: mini game 2
+
+//function 3 : mini game 3
+
+//function 4 : mini game 4
 
 
 /*
