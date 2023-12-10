@@ -8,7 +8,7 @@
  4 = mini game4
 */
 
-let gameState = 0;
+let gameState = 1;
 
 
 let cat
@@ -21,6 +21,18 @@ let mg2
 let mg3
 let mg4
 
+//game 1 variables
+let groundX = 0
+let groundY = 600
+let obstacle1X = 1000
+let obstacle1Y = 520
+
+let ground2X = 1024
+let ground2Y = 600
+
+
+//game 2 variables 
+
 function preload(){
     catIdle = loadImage("img/cat03_idle_blink_8fps.gif");
     catRun = loadImage("img/cat03_run_12fps.gif")
@@ -28,24 +40,24 @@ function preload(){
 }
 
 function setup(){
-    createCanvas(windowWidth,windowHeight)
+    createCanvas(1024,windowHeight)
     cat = new Cat(width/2, height/2)
-    cat2 = new Cat(0,300)
+    cat2 = new Cat(30,570)
     noStroke()
     mg1 = new Square(100,100, "Game 1")
     mg2 = new Square(800,100, "Game 2")
     mg3 = new Square(100,400, "Game 3")
     mg4 = new Square(800,400, "Game 4")
+    frameRate(20)
 
 }
 
 function draw(){
     background(248,131,121)
-    text("cat pos x : " + cat.x + " cat pos y: " + cat.y, 15,15)
+    //text("cat pos x : " + cat.x + " cat pos y: " + cat.y, 15,15)
     if(gameState == 0){ // the default map 
         
         mg1.display()
-       
         mg2.display()
         mg3.display()
         mg4.display()
@@ -126,6 +138,8 @@ class Cat{
         this.status = "idle"
         this.graphic = catIdle
         this.speed = 5
+        this.jumpMode = false
+        this.jumpPower = 0
     }
 
     display(){
@@ -155,6 +169,29 @@ class Cat{
             this.graphic = catRun
             this.y += this.speed
         }
+    }
+
+    move2(){
+        this.graphic = catIdle
+        if (keyIsDown(RIGHT_ARROW)){
+                this.graphic = catRun
+                this.x += this.speed
+        }
+
+        else if(keyIsDown(LEFT_ARROW)){
+                this.graphic = catRun
+                this.x -= this.speed
+        }
+
+        // else if(keyIsDown(UP_ARROW)){
+        //     this.graphic = catRun
+        //     this.y -= this.speed
+        // }
+
+        // else if(keyIsDown(DOWN_ARROW)){
+        //     this.graphic = catRun
+        //     this.y += this.speed
+        // }
     }
 
     detectMinigame(mg){
@@ -187,20 +224,23 @@ class Square{
         this.s = 200
         this.txt = txt
         this.color = color(255,255,255)
+        this.points = 0
 
     }
 
     display(){
-        
+        noStroke()
         fill(this.color)
         rect(this.x,this.y,this.s,this.s)
         fill("pink")
         textSize(20)
         text(this.txt,this.x + 60,this.y + 100)
+        text(this.points + " / 10", this.x + 60, this.y + 130)
         noFill()
         stroke(128)
-        text("x: " + this.x + " y: " + this.y, this.x + 60,this.y + 150)
+        //text("x: " + this.x + " y: " + this.y, this.x + 60,this.y + 150)
         noFill()
+
         
     }
 
@@ -212,9 +252,53 @@ function one(){
     noStroke()
     //floor
     fill(128)
-    rect(0,500,width,width)
+    text("ground1 x " + groundX,100,20)
+    text("ground2 x " + ground2X,100,40)
+
+    rect(groundX,groundY,width,width)
+    rect(ground2X,ground2Y,width,width)
+    rect(obstacle1X,obstacle1Y,30,80)
+
+    fill("green")
+    ellipse(groundX,groundY,20,20)
+    fill("blue")
+    ellipse(ground2X,ground2Y,20,20)
+
+    obstacle1X-= 1
+    ground2X -= 2
+    groundX -= 2
+    if(groundX <= -1024){
+        groundX =  1024
+    }
+    if(ground2X <= -1024){
+        ground2x = 1024
+    }
+
     cat2.display()
-    cat2.move()
+    cat2.move2()
+
+    if(keyIsPressed && key === "j" && cat2.jumpMode === false){
+        cat2.jumpPower = -7
+        cat2.jumpMode = true
+
+    }
+
+    if(cat2.jumpMode === true){
+        cat2.y += cat2.jumpPower
+        cat2.jumpPower += 0.2
+
+        if(cat2.y >= groundY){
+            cat2.jumpMode = false
+            cat2.jumpPower = 0
+            cat2.y = groundY-15
+        }
+
+    }
+
+
+    
+ 
+   
     
     
 }
