@@ -257,21 +257,23 @@ function one(){
 
     rect(groundX,groundY,width,width)
     rect(ground2X,ground2Y,width,width)
-    rect(obstacle1X,obstacle1Y,30,80)
+    //rect(obstacle1X,obstacle1Y,30,80)
 
     fill("green")
     ellipse(groundX,groundY,20,20)
     fill("blue")
     ellipse(ground2X,ground2Y,20,20)
 
-    obstacle1X-= 1
+    //obstacle1X-= 1
     ground2X -= 2
     groundX -= 2
+
     if(groundX <= -1024){
         groundX =  1024
     }
+
     if(ground2X <= -1024){
-        ground2x = 1024
+        ground2X = groundX + 1024
     }
 
     cat2.display()
