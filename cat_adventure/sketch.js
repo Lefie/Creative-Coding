@@ -6,9 +6,17 @@
  2 = mini game2
  3 = mini game3
  4 = mini game4
+ 5 = loss mg1
+ 6 = won mg1
+ 7
+ 8
+ 9
+ 10
+ 11
+ 12
 */
 
-let gameState = 1;
+let gameState = 0;
 
 
 let cat
@@ -21,14 +29,34 @@ let mg2
 let mg3
 let mg4
 
+let mg1Points = 0
+let mg2Points = 0
+let mg3Points = 0
+let mg4Points = 0
+
+//overall score
+let score = 0
+
+
 //game 1 variables
 let groundX = 0
 let groundY = 600
-let obstacle1X = 1000
-let obstacle1Y = 520
+
 
 let ground2X = 1024
 let ground2Y = 600
+
+let ground1
+let ground2
+
+let obs1
+let obs2
+
+
+let award
+
+
+
 
 
 //game 2 variables 
@@ -48,7 +76,12 @@ function setup(){
     mg2 = new Square(800,100, "Game 2")
     mg3 = new Square(100,400, "Game 3")
     mg4 = new Square(800,400, "Game 4")
-    frameRate(20)
+    //frameRate(20)
+    ground1 = new Ground(0,600)
+    ground2 = new Ground(1024, 600)
+    obs1 = new Obstacle(random(1024,1030),550,random(10,50),100)
+    obs2 = new Obstacle(random(1040,1050),550,random(10,50),100)
+    award = new Award(random(100,1000),500)
 
 }
 
@@ -97,7 +130,14 @@ function draw(){
     }
 
     if(gameState === 1){
-        one()
+        let res = one()
+        if (res === "loss"){
+            gameState = 5
+        }
+
+        if(res === "won"){
+            gameState = 6
+        }
     }
 
     if(gameState === 2 ){
@@ -111,6 +151,14 @@ function draw(){
     if(gameState === 4){
         four()
     }
+
+    if(gameState === 5){
+        loss(mg1)
+    }
+
+    
+
+    
 
   
 
@@ -183,15 +231,7 @@ class Cat{
                 this.x -= this.speed
         }
 
-        // else if(keyIsDown(UP_ARROW)){
-        //     this.graphic = catRun
-        //     this.y -= this.speed
-        // }
-
-        // else if(keyIsDown(DOWN_ARROW)){
-        //     this.graphic = catRun
-        //     this.y += this.speed
-        // }
+       
     }
 
     detectMinigame(mg){
@@ -211,10 +251,8 @@ class Cat{
 
         }
        
-        
     }
 
-    
 }
 
 class Square{
@@ -240,47 +278,151 @@ class Square{
         stroke(128)
         //text("x: " + this.x + " y: " + this.y, this.x + 60,this.y + 150)
         noFill()
-
-        
     }
 
 
 }
 
+class Ground{
+    constructor(x,y){
+        this.x = x
+        this.y = y
+     
+    }
+
+    display(){
+        rectMode(CORNER)
+        fill(128)
+        rect(this.x, this.y, 1024,1024)
+        
+    }
+
+}
+
+class Obstacle{
+    constructor(x,y,w,h){
+        this.x = x
+        this.y = y
+        this.w = w
+        this.h = h
+        this.speed = random(1,3)
+        this.color1 = color(random(255), random(255), random(255))
+    }
+
+    display(){
+        rectMode(CENTER)
+        fill(this.color1)
+        rect(this.x, this.y, this.w, this.h)
+    }
+
+    move(){
+        this.x -= this.speed
+    }
+
+    detection(cat){
+        let dis = dist(cat.x,cat.y,this.x,this.y)
+        text(dis,100,100)
+        if(dis < 40){
+            mg1Points -= 5
+            this.x = 0
+        }
+    }
+
+}
+
+class Award{
+    constructor(x,y){
+        this.x = x;
+        this.y = y
+    }
+
+    display(){
+        fill(color(0,200,0))
+        ellipse(this.x, this.y, 20,20)
+    }
+
+    detectCollisionWithPlayer(cat){
+        let dis = dist(cat.x,cat.y,this.x,this.y)
+        //text(dis,10,10)
+        if(dis < 25){
+            this.x = random(100,1000)
+            mg1Points += 1
+        }
+    }
+
+    
+}
+
 function one(){
-    background("pink")
+    
+
+    if(mg1Points <= -10){
+        //gameState = 5
+        //loss(mg1)
+        return "loss"
+    }
+    else if(mg1Points >= 10){
+        //gameState = 6
+        //won(mg1)
+        return "won"
+    }else{
+
+        background("pink")
     noStroke()
+    rectMode(CENTER)
+    fill("black")
+    textSize(20)
+    text("Score: " + mg1Points, 20,20)
     //floor
     fill(128)
-    text("ground1 x " + groundX,100,20)
-    text("ground2 x " + ground2X,100,40)
+    //text("ground1 x " + ground1.x,100,20)
+    //text("ground2 x " + ground2.x,100,40)
 
-    rect(groundX,groundY,width,width)
-    rect(ground2X,ground2Y,width,width)
-    //rect(obstacle1X,obstacle1Y,30,80)
+    ground1.display()
+    ground2.display()
 
-    fill("green")
-    ellipse(groundX,groundY,20,20)
-    fill("blue")
-    ellipse(ground2X,ground2Y,20,20)
+    ground1.x -= 2
+    ground2.x -= 2
 
-    //obstacle1X-= 1
-    ground2X -= 2
-    groundX -= 2
-
-    if(groundX <= -1024){
-        groundX =  1024
+    if(ground1.x <= -1024){
+        ground1.x =  1024
     }
 
-    if(ground2X <= -1024){
-        ground2X = groundX + 1024
+    if(ground2.x <= -1024){
+        ground2.x = ground1.x + 1024
     }
 
+
+    //let obs = new Obstacle(random(100,400),500,10,10)
+    obs1.display()   
+    obs1.move()
+    obs1.detection(cat2)
+
+    obs2.display()
+    obs2.move()
+    obs2.detection(cat2)
+
+    if(obs1.x < 0){
+        obs1.x = random(cat.x + 100,1000)
+        obs1.w = random(10,100)
+    }
+
+    if(obs2.x < 0){
+        obs2.x = random(cat.x + 200,1000)
+        obs2.w = random(10,100)
+    }
+
+
+   
+    
     cat2.display()
     cat2.move2()
 
-    if(keyIsPressed && key === "j" && cat2.jumpMode === false){
-        cat2.jumpPower = -7
+    award.display()
+    award.detectCollisionWithPlayer(cat2)
+
+    if(keyIsDown(UP_ARROW) && cat2.jumpMode === false){
+        cat2.jumpPower = -9
         cat2.jumpMode = true
 
     }
@@ -297,13 +439,17 @@ function one(){
 
     }
 
+    return "nothing"
+        
+    }
+
+
 
     
- 
-   
-    
-    
+
 }
+
+
 
 function two(){
     background("pink")
@@ -315,4 +461,73 @@ function three(){
 
 function four(){
     background("red")
+}
+
+function loss(game){
+
+    background("pink")
+    fill(0)
+    text("You lost!",250,250)
+    if(game.txt === "Game 1"){
+        text("You got: " + mg1Points + " points",250,270)
+        mg1.points = mg1Points
+        
+    }
+
+    if(game.txt === "Game 2"){
+        text("You got: " + mg2Points + " points",250,250)
+        mg2.points = mg2Points
+        
+    }
+
+    if(game.txt === "Game 3"){
+        text("You got: " + mg3Points + " points",250,250)
+        mg3.points = mg3Points
+        
+    }
+
+    if(game.txt === "Game 4"){
+        text("You got: " + mg4Points + " points",250,250)
+        mg4.points = mg4Points
+        
+    }
+
+    //onclick - change game state to 0
+    
+    
+
+
+    
+
+   
+
+}
+
+function won(game){
+
+    background("pink")
+    text("You won!",250,250)
+    if(game.txt === "Game 1"){
+        text("You got: " + mg1Points + " points",250,250)
+    }
+
+    if(game.txt === "Game 2"){
+        text("You got: " + mg2Points + " points",250,250)
+        mg2.points = mg2Points
+        mg2Points = 0
+    }
+
+    if(game.txt === "Game 3"){
+        text("You got: " + mg3Points + " points",250,250)
+        mg3.points = mg3Points
+        mg3Points = 0
+    }
+
+    if(game.txt === "Game 4"){
+        text("You got: " + mg4Points + " points",250,250)
+        mg4.points = mg4Points
+        mg4Points = 0
+    }
+
+
 }
