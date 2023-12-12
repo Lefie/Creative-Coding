@@ -35,6 +35,21 @@ let scoreboard2
 let scoreboard3
 let scoreboard4
 
+//exit button
+let exit
+
+//intruction btns
+let btn1
+let btn2
+let btn3
+let btn4
+let show = false
+let show2 = false
+let show3 = false
+let show4 = false
+
+
+
 //game 1 variables
 let groundX = 0;
 let groundY = 600;
@@ -45,6 +60,7 @@ let ground2;
 let obs1;
 let obs2;
 let award;
+let timer3
 
 //game 2 variables
 let hole1;
@@ -128,8 +144,15 @@ function setup() {
   scoreboard3 = new ScoreBoard(mg3);
   scoreboard4 = new ScoreBoard(mg4);
 
-  
+  //exit btn
+  exit = new Exit()
 
+  //instruction btns
+  btn1 = new Instruction(mg1.x + 90, mg1.y - 40, mg1)
+  btn2 = new Instruction(mg2.x + 90, mg2.y - 40, mg2)
+  btn3 = new Instruction(mg3.x + 90, mg3.y - 40, mg3)
+  btn4 = new Instruction(mg4.x + 90, mg4.y - 40, mg4)
+  
 }
 
 function draw() {
@@ -146,14 +169,108 @@ function draw() {
     cat.display();
     cat.move();
 
-    console.log("got here 1");
+    /*
+    instruction for game 1
+    */
+    if( show === false ){
+      btn1.displayBtn()
+    }else if(show === true){
+      btn1.displayInstruction()
+    }
+   
+    let dis = dist(mouseX,mouseY,btn1.x, btn1.y)
+    let dis2 = dist(mouseX, mouseY, btn1.instructionX, btn2.instructionY)
+    
+    if(dis < 15 && mouseIsPressed){
+      if(show === false){
+        show = true
+      }
+    }
+
+    if(dis2 < 15 && mouseIsPressed){
+      if(show === true){
+        show = false
+      }
+    }
+
+
+    /*
+    instruction for game 2
+    */
+    if( show2 === false ){
+      btn2.displayBtn()
+    }else if(show2 === true){
+      btn2.displayInstruction()
+    }
+   
+    let dis3 = dist(mouseX,mouseY,btn2.x, btn2.y)
+    let dis4 = dist(mouseX, mouseY, btn2.instructionX, btn2.instructionY)
+    
+    if(dis3 < 15 && mouseIsPressed){
+      if(show2 === false){
+        show2 = true
+      }
+    }
+
+    if(dis4 < 15 && mouseIsPressed){
+      if(show2 === true){
+        show2 = false
+      }
+    }
+
+    /*
+    instruction for game 3
+    */
+    if( show3 === false ){
+      btn3.displayBtn()
+    }else if(show3 === true){
+      btn3.displayInstruction()
+    }
+   
+    let dis5 = dist(mouseX,mouseY,btn3.x, btn3.y)
+    let dis6 = dist(mouseX, mouseY, btn3.instructionX, btn3.instructionY)
+    
+    if(dis5 < 15 && mouseIsPressed){
+      if(show3 === false){
+        show3 = true
+      }
+    }
+
+    if(dis6 < 15 && mouseIsPressed){
+      if(show3 === true){
+        show3 = false
+      }
+    }
+
+     /*
+    instruction for game 4
+    */
+    if( show4 === false ){
+      btn4.displayBtn()
+    }else if(show4 === true){
+      btn4.displayInstruction()
+    }
+   
+    let dis7 = dist(mouseX,mouseY,btn4.x, btn4.y)
+    let dis8 = dist(mouseX, mouseY, btn4.instructionX, btn4.instructionY)
+    
+    if(dis7 < 15 && mouseIsPressed){
+      if(show4 === false){
+        show4 = true
+      }
+    }
+
+    if(dis8 < 15 && mouseIsPressed){
+      if(show4 === true){
+        show4 = false
+      }
+    }
 
     let minigame1 = cat.detectMinigame(mg1);
     let minigame2 = cat.detectMinigame(mg2);
     let minigame3 = cat.detectMinigame(mg3);
     let minigame4 = cat.detectMinigame(mg4);
 
-    console.log("got here 2");
 
     //if game state is 1 : we enter into mini game1
 
@@ -329,7 +446,29 @@ class Square {
     fill("pink");
     textSize(20);
     text(this.txt, this.x + 60, this.y + 100);
+
+    if(this.txt === "Game 1"){
+      if(mg1Points > this.points){
+        this.points = mg1Points
+      }
+      
+    }else if(this.txt === "Game 2"){
+      if(mg2Points > this.points){
+        this.points = mg2Points
+      }
+    }else if(this.txt === "Game 3"){
+      if(mg3Points > this.points){
+        this.points = mg3Points
+      }
+    }else if(this.txt === "Game 4"){
+      if(mg4Points > this.points){
+        this.points = mg4Points
+      }
+    }
+
     text(this.points + " / 10", this.x + 60, this.y + 130);
+
+    
     noFill();
     stroke(128);
     //text("x: " + this.x + " y: " + this.y, this.x + 60,this.y + 150)
@@ -648,15 +787,155 @@ class ScoreBoard{
   }
 }
 
+/*
+Exit btn for all games
+*/
+
+class Exit{
+  constructor(){
+    this.x = 950
+    this.y = 50
+    this.w = 100
+    this.h = 50
+  }
+
+  display(){
+    fill("white")
+    rectMode(CENTER)
+    rect(this.x, this.y,this.w, this.h)
+    fill("black")
+    textSize(25)
+    text("Exit", this.x-20 , this.y + 10)
+
+  }
+
+  detectClickOnExit(){
+    text(dist(this.x,this.y, mouseX,mouseY),100,150)
+    let dis = dist(this.x,this.y, mouseX,mouseY)
+    if(dis < 20){
+      fill(128)
+      rectMode(CENTER)
+      rect(this.x, this.y,this.w, this.h)
+      fill("black")
+      text("Exit", this.x-20 , this.y + 10)
+      
+      
+    }
+
+    if (dis < 20 && mouseIsPressed){
+      fill("yellow")
+      rectMode(CENTER)
+      rect(this.x, this.y,this.w, this.h)
+      fill("black")
+      text("Exit", this.x-20 , this.y + 10)
+      gameState = 0
+      cat.x = width / 2;
+      cat.y = height / 2;
+    }
+
+  }
+
+  displayOptions(){
+    rectMode(CENTER)
+    fill("white")
+    rect(500,500,100,100)
+  }
+
+}
+
+/*
+instruction for each game
+
+*/
+
+class Instruction{
+  constructor(x,y,mg){
+    this.x = x
+    this.y = y
+    this.instructionX = 500
+    this.instructionY = 900
+    this.mg = mg 
+  }
+
+  displayBtn(){
+    noStroke()
+    rectMode(CENTER)
+    fill("white")
+    rect(this.x,this.y,120,50)
+    fill("black")
+    text("instruction",this.x-40,this.y + 5)
+
+    let dis = dist(mouseX,mouseY,this.x, this.y)
+    if( dis <  15){
+      fill(128)
+      rect(this.x,this.y,120,50)
+      fill("black")
+      text("instruction",this.x-40,this.y + 5)
+
+    }
+
+  }
+
+  displayInstruction(){
+    rectMode(CENTER)
+    fill("white")
+    rect(this.instructionX,this.instructionY,500,300)
+    let dis = dist(mouseX, mouseY, this.instructionX, this.instructionY)
+    if(dis < 15){
+      fill(128)
+      rect(this.instructionX,this.instructionY,500,300)
+    }
+    
+    if(this.mg.txt === "Game 1"){
+      fill("black")
+      text(
+        "instruction for game 1: \n press the" + 
+        " up arrow key to jump over the blocks. \n Collect as many green points as possible",300,800
+      )
+    }
+
+    if(this.mg.txt === "Game 2"){
+      fill("black")
+      text(
+        "instruction for game 2: \n Click on as many rats as possible" + 
+        " \n to earn the most points",300,800
+      )
+    }
+
+    if(this.mg.txt === "Game 3"){
+      fill("black")
+      text(
+        "instruction for game 3: \n navigate the cat using 4 arrows" + 
+        "\n press the 'k' key to kill enemies.Clear out enemies \n" + 
+        " within 60 seconds to win full points. ",300,800
+      )
+    }
+
+    if(this.mg.txt === "Game 4"){
+      fill("black")
+      text(
+        "instruction for game 4: \n Use the four arrow keys to \n" + 
+        " navigate the cat \n Collect as many treats as possible! Avoid the rats!  ",300,800
+      )
+    }
+
+    
+
+  }
+}
+
 
 
 function one() {
+  
   if (mg1Points <= -10 || mg1Points >= 10) {
     mg1.points = mg1Points;
     scoreboard1.display()
     
   } else {
     background("pink");
+    exit.display()
+    exit.detectClickOnExit()
     noStroke();
     rectMode(CENTER);
     fill("black");
@@ -728,6 +1007,8 @@ function two() {
   background("pink");
 
   if(timer > 0){
+    exit.display()
+    exit.detectClickOnExit()
     hole1.display();
     hole2.display();
   
@@ -743,7 +1024,7 @@ function two() {
 
 
     fill("black")
-    textSize(50)
+    textSize(30)
     text(timer,500,100)
     if(frameCount % 60 === 0 && timer > 0){
       timer -= 1
@@ -815,6 +1096,8 @@ function three() {
   }
   
   else if(timer2 > 0 && enemyArr.length > 0){
+    exit.display()
+    exit.detectClickOnExit()
     cat3.display()
     cat3.move3()
     for(let i = 0; i < enemyArr.length;i++){
@@ -822,7 +1105,7 @@ function three() {
         enemyArr[i].move()
     }
     cat3.detectEnemy()
-    textSize(45)
+    textSize(30)
     text(timer2,350,150)
     if(frameCount % 60 === 0 && timer2 > 0){
         timer2 -= 1
@@ -840,34 +1123,36 @@ function four() {
     scoreboard4.display()
 
   }else{
-        fill(128)
-        rectMode(CORNER)
-        rect(0,0,width,150)
-        fill("white")
-        textSize(30)
-        text("score: "+mg4Points,50,40)
-        fill(128)
-        rect(0,250,width,150)
+    
+    fill(128)
+    rectMode(CORNER)
+    rect(0,0,width,150)
+    fill("white")
+    textSize(30)
+    text("score: "+mg4Points,50,40)
+    fill(128)
+    rect(0,250,width,150)
 
-        rect(0,500,width,150)
+    rect(0,500,width,150)
 
-        rect(0,750,width,150)
+    rect(0,750,width,150)
 
-        rect(0,1000,width,150)
+    rect(0,1000,width,150)
+    exit.display()
+    exit.detectClickOnExit()
 
 
-        mouse.display()
-        mouse.move()
+    mouse.display()
+    mouse.move()
 
-        cat4.display()
-        cat4.move()
-        mouse.detectCat(cat4)
-        
+    cat4.display()
+    cat4.move()
+    mouse.detectCat(cat4)
+    
 
-        award1.display()
-        award1.detectCollisionWithPlayer(cat4)
-        award1.detectCollisionMouse(mouse)
-
+    award1.display()
+    award1.detectCollisionWithPlayer(cat4)
+    award1.detectCollisionMouse(mouse)
 
   }
 
