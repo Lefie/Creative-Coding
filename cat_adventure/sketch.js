@@ -60,7 +60,7 @@ let ground2;
 let obs1;
 let obs2;
 let award;
-let timer3
+let timer3 = 60
 
 //game 2 variables
 let hole1;
@@ -86,6 +86,7 @@ let timer2 = 60
 let mouse;
 let award1
 let ypos = [80,330,580,830,1080]
+let timer4 = 60
 
 
 
@@ -397,6 +398,7 @@ class Cat {
     for(let i = 0; i < enemyArr.length; i++){
         let dis = dist(enemyArr[i].x, enemyArr[i].y, this.x, this.y)
         if(dis < 25 && keyIsPressed && key === "k"){
+            mg3Points += 1
             enemyArr.splice(i,1)
         }else if(dis < 25 ){
             enemyArr.push(new Enemy(random(100,1000), random(100,1000)))
@@ -466,7 +468,9 @@ class Square {
       }
     }
 
-    text(this.points + " / 10", this.x + 60, this.y + 130);
+    textSize(25)
+    
+    text(this.points, this.x + 80, this.y + 130);
 
     
     noFill();
@@ -511,7 +515,7 @@ class Obstacle {
 
   detection(cat) {
     let dis = dist(cat.x, cat.y, this.x, this.y);
-    text(dis, 100, 100);
+    //text(dis, 100, 100);
     if (dis < 40) {
       mg1Points -= 5;
       this.x = 0;
@@ -729,7 +733,7 @@ class ScoreBoard{
     rectMode(CENTER)
     textSize(30)
     fill("black")
-    text("You have won " + this.mg.points + " points for this game!",300,350)
+    text("You have earned " + this.mg.points + " points for this game!",300,350)
     
     fill("orange");
     rect(this.exitX, this.exitY, 150, 150);
@@ -810,7 +814,7 @@ class Exit{
   }
 
   detectClickOnExit(){
-    text(dist(this.x,this.y, mouseX,mouseY),100,150)
+    //text(dist(this.x,this.y, mouseX,mouseY),100,150)
     let dis = dist(this.x,this.y, mouseX,mouseY)
     if(dis < 20){
       fill(128)
@@ -858,6 +862,7 @@ class Instruction{
   }
 
   displayBtn(){
+    textSize(20)
     noStroke()
     rectMode(CENTER)
     fill("white")
@@ -881,6 +886,7 @@ class Instruction{
     fill("white")
     rect(this.instructionX,this.instructionY,500,300)
     let dis = dist(mouseX, mouseY, this.instructionX, this.instructionY)
+    textSize(20)
     if(dis < 15){
       fill(128)
       rect(this.instructionX,this.instructionY,500,300)
@@ -906,8 +912,9 @@ class Instruction{
       fill("black")
       text(
         "instruction for game 3: \n navigate the cat using 4 arrows" + 
-        "\n press the 'k' key to kill enemies.Clear out enemies \n" + 
-        " within 60 seconds to win full points. ",300,800
+        "\n press the 'k' key to kill enemies. \n" + 
+        " If you bump into an enemy without pressing 'k',\n the number of enemies increases. \n"+
+        " Try to kill as many enemies as possible",300,800
       )
     }
 
@@ -928,7 +935,7 @@ class Instruction{
 
 function one() {
   
-  if (mg1Points <= -10 || mg1Points >= 10) {
+  if (timer3 <= 0) {
     mg1.points = mg1Points;
     scoreboard1.display()
     
@@ -936,6 +943,8 @@ function one() {
     background("pink");
     exit.display()
     exit.detectClickOnExit()
+    fill("black")
+    text("Timer: " + timer3, 500,100)
     noStroke();
     rectMode(CENTER);
     fill("black");
@@ -1000,6 +1009,12 @@ function one() {
         cat2.y = groundY - 15;
       }
     }
+
+    if(frameCount % 60 === 0 && timer3 > 0 ){
+      timer3 -= 1
+    
+    }
+    
   }
 }
 
@@ -1025,21 +1040,14 @@ function two() {
 
     fill("black")
     textSize(30)
-    text(timer,500,100)
+    text("Timer:" + timer,500,100)
     if(frameCount % 60 === 0 && timer > 0){
       timer -= 1
     }
 
   }else{
     
-    if(clicks > 15){
-        mg2Points = 10
-     
-    }else if(clicks >= 10){
-        mg2Points = 5
-    }else{
-        mg2Points = 3
-    }
+    mg2Points = clicks
 
     mg2.points = mg2Points
 
@@ -1052,50 +1060,16 @@ function two() {
 function three() {
   background("pink");
 
-  if(timer2 === 0 && enemyArr.length != 0){
-    //lose
-    mg3Points = 0
+  if((timer2 === 0 && enemyArr.length != 0) || (enemyArr.length === 0 && timer2 > 0)){
+    
     mg3.points = mg3Points
-
     scoreboard3.display()
 
   }
-
-  else if(enemyArr.length === 0 && timer2 > 0){
-    //win
-    mg3Points = 10
-    mg3.points = mg3Points
-
-    noStroke()
-    rectMode(CENTER)
-    fill("black")
-    text("You have won " + mg3Points + " points for this game!",450,350)
-    fill("orange");
-    rect(350, 550, 150, 150);
-    fill("white");
-    textSize(25);
-    text("Exit", 335, 570);
-
-    if (dist(350, 550, mouseX, mouseY) < 20 && mouseIsPressed) {
-      cat.x = width / 2;
-      cat.y = height / 2;
-      gameState = 0;
-    }
-
-    fill("green");
-    rect(850, 550, 150, 150);
-    fill("white");
-    textSize(25);
-    text("Try Again", 800, 570);
-
-    if (dist(850, 550, mouseX, mouseY) < 20 && mouseIsPressed) {
-        fill("green")
-        rect(20,20,50,50)
-        resetMg3();
-    }
-  }
   
   else if(timer2 > 0 && enemyArr.length > 0){
+    textSize(20)
+    text("Enemies Killed: " + mg3Points, 100,100)
     exit.display()
     exit.detectClickOnExit()
     cat3.display()
@@ -1106,7 +1080,7 @@ function three() {
     }
     cat3.detectEnemy()
     textSize(30)
-    text(timer2,350,150)
+    text("Timer: " + timer2,500,150)
     if(frameCount % 60 === 0 && timer2 > 0){
         timer2 -= 1
     }
@@ -1118,7 +1092,7 @@ function three() {
 function four() {
   background("pink");
 
-  if(mg4Points >= 10 || mg4Points < -10){
+  if(timer4 <= 0){
     mg4.points = mg4Points
     scoreboard4.display()
 
@@ -1138,6 +1112,9 @@ function four() {
     rect(0,750,width,150)
 
     rect(0,1000,width,150)
+    fill("white")
+    text("Timer: " + timer4, 50,100)
+
     exit.display()
     exit.detectClickOnExit()
 
@@ -1154,6 +1131,10 @@ function four() {
     award1.detectCollisionWithPlayer(cat4)
     award1.detectCollisionMouse(mouse)
 
+    if(frameCount % 60 === 0 && timer4 > 0){
+      timer4 -= 1
+    }
+
   }
 
 }
@@ -1165,7 +1146,9 @@ game reset functions
 */
 
 function resetMg1() {
+
   mg1Points = 0;
+  timer3 = 60
   cat2.x = 30;
   cat2.y = 570;
 
@@ -1198,4 +1181,5 @@ function resetMg3(){
 function resetMg4(){
     mg4Points = 0;
     cat4.y = 1170
+    timer4 = 60
 }
