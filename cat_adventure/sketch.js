@@ -8,11 +8,12 @@
 
 */
 
-let gameState = 0;
+let gameState = 4;
 
 let cat;
 let cat2;
 let cat3;
+let cat4
 let catIdle;
 let catAttack;
 let catRun;
@@ -49,7 +50,7 @@ let hole4;
 let hole5;
 let hole6;
 let mouseImg;
-let mouse;
+
 let mousePosX = [170, 670];
 let mousePosY = [540, 240, 840];
 let timer = 2
@@ -59,6 +60,11 @@ let clicks = 0
 let enemyImg
 let enemyArr = []
 let timer2 = 120
+
+//game 4
+let mouse;
+let award1
+let ypos = [80,330,580,830,1080]
 
 
 
@@ -75,6 +81,7 @@ function setup() {
   cat = new Cat(width / 2, height / 2);
   cat2 = new Cat(30, 570);
   cat3 = new Cat(30, 570)
+  cat4 = new Cat(30,1200)
   noStroke();
   mg1 = new Square(100, 200, "Game 1");
   mg2 = new Square(700, 200, "Game 2");
@@ -97,13 +104,19 @@ function setup() {
   hole5 = new Hole(250, 900);
   hole6 = new Hole(750, 900);
   //mouse = new Mouse(random(mousePosX) + 90, random(mousePosY) + 50);
-  mouse = new Mouse(random(mousePosX) + 90, random(mousePosY) + 50)
+  //mouse = new Mouse(random(mousePosX) + 90, random(mousePosY) + 50)
 
   //game3
-  
   for(let i = 0; i < 10; i++){
     enemyArr.push(new Enemy(random(100,1000),random(100,1200)))
   }
+
+  //game 4
+  mouse = new Mouse(80,80,20,20);
+
+  
+  award1 = new Treat(random(10,width),random(ypos))
+
   
 
 }
@@ -367,14 +380,51 @@ class Award {
   }
 
   detectCollisionWithPlayer(cat) {
+   
     let dis = dist(cat.x, cat.y, this.x, this.y);
     //text(dis,10,10)
     if (dis < 25) {
       this.x = random(100, 1000);
+      this.y = random(ypos)
       mg1Points += 1;
     }
   }
 }
+
+class Treat {
+    constructor(x, y) {
+      this.x = x;
+      this.y = y;
+    }
+  
+    display() {
+      fill(color(0, 200, 0));
+      ellipse(this.x, this.y, 20, 20);
+    }
+  
+    detectCollisionWithPlayer(cat) {
+      let dis = dist(cat.x, cat.y, this.x, this.y);
+      //text(dis,10,10)
+      if (dis < 25) {
+        this.x = random(100, 1000);
+        this.y = random(ypos)
+        mg4Points += 2;
+      }
+    }
+
+    detectCollisionMouse(mouse){
+        let dis = dist(mouse.x, mouse.y, this.x, this.y);
+      //text(dis,10,10)
+      if (dis < 25) {
+        this.x = random(100, 1000);
+        this.y = random(ypos)
+      }
+
+
+    }
+
+
+  }
 
 /*
 game 2 classes
@@ -426,6 +476,27 @@ class Mouse {
         
     }
   }
+
+  move(){
+    let ys = [80,330,580,830,1080]
+    this.x += 10
+   
+    if(this.x > width){
+        this.x = -50
+        this.y = random(ys)
+    }
+  }
+
+  detectCat(cat){
+    let dis = dist(cat.x,cat.y,this.x,this.y)
+    if( dis < 100){
+        cat.y = 1200
+        mg4Points -= 5
+    }
+    
+  }
+
+
 
   
 }
@@ -735,7 +806,82 @@ function three() {
 
 function four() {
   background("pink");
+
+  if(mg4Points >= 10 || mg4Points < -10){
+    mg4.points = mg4Points
+    noStroke()
+    rectMode(CENTER)
+    fill("black")
+    text("You have won " + mg4Points + " points for this game!",450,350)
+    fill("orange");
+    rect(350, 550, 150, 150);
+    fill("white");
+    textSize(25);
+    text("Exit", 335, 570);
+
+    if (dist(350, 550, mouseX, mouseY) < 20 && mouseIsPressed) {
+      cat.x = width / 2;
+      cat.y = height / 2;
+      gameState = 0;
+    }
+
+    fill("green");
+    rect(850, 550, 150, 150);
+    fill("white");
+    textSize(25);
+    text("Try Again", 800, 570);
+
+    if (dist(850, 550, mouseX, mouseY) < 20 && mouseIsPressed) {
+        fill("green")
+        rect(20,20,50,50)
+        resetMg4();
+    }
+
+  }else{
+        fill(128)
+        rectMode(CORNER)
+        rect(0,0,width,150)
+        fill("white")
+        textSize(30)
+        text("score: "+mg4Points,50,40)
+        fill(128)
+        rect(0,250,width,150)
+
+        rect(0,500,width,150)
+
+        rect(0,750,width,150)
+
+        rect(0,1000,width,150)
+
+
+        mouse.display()
+        mouse.move()
+
+        cat4.display()
+        cat4.move()
+        mouse.detectCat(cat4)
+        
+
+        award1.display()
+        award1.detectCollisionWithPlayer(cat4)
+        award1.detectCollisionMouse(mouse)
+
+
+  }
+  
+  
+  
+
+
+
+  
 }
+
+
+
+/*
+game reset functions
+*/
 
 function resetMg1() {
   mg1Points = 0;
@@ -761,4 +907,9 @@ function resetMg3(){
     while(enemyArr.length < 10){
         enemyArr.push(new Enemy(random(10,100), random(10,100)))
     }
+}
+
+function resetMg4(){
+    mg4Points = 0;
+    cat4.y = 1225
 }
