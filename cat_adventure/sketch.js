@@ -8,7 +8,7 @@
 
 */
 
-let gameState = 4;
+let gameState = 0;
 
 let cat;
 let cat2;
@@ -30,6 +30,10 @@ let mg4Points = 0;
 
 //overall score
 let score = 0;
+let scoreboard1
+let scoreboard2
+let scoreboard3
+let scoreboard4
 
 //game 1 variables
 let groundX = 0;
@@ -53,18 +57,21 @@ let mouseImg;
 
 let mousePosX = [170, 670];
 let mousePosY = [540, 240, 840];
-let timer = 2
+let mouse2
+let timer = 30
 let clicks = 0
 
 //game 3 variables
 let enemyImg
 let enemyArr = []
-let timer2 = 120
+let timer2 = 60
 
 //game 4
 let mouse;
 let award1
 let ypos = [80,330,580,830,1080]
+
+
 
 
 
@@ -77,11 +84,11 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(1024, windowHeight);
+  createCanvas(1024, 1200);
   cat = new Cat(width / 2, height / 2);
   cat2 = new Cat(30, 570);
   cat3 = new Cat(30, 570)
-  cat4 = new Cat(30,1200)
+  cat4 = new Cat(30,1170)
   noStroke();
   mg1 = new Square(100, 200, "Game 1");
   mg2 = new Square(700, 200, "Game 2");
@@ -103,7 +110,7 @@ function setup() {
 
   hole5 = new Hole(250, 900);
   hole6 = new Hole(750, 900);
-  //mouse = new Mouse(random(mousePosX) + 90, random(mousePosY) + 50);
+  mouse2 = new Mouse(random(mousePosX) + 90, random(mousePosY) + 50);
   //mouse = new Mouse(random(mousePosX) + 90, random(mousePosY) + 50)
 
   //game3
@@ -113,9 +120,13 @@ function setup() {
 
   //game 4
   mouse = new Mouse(80,80,20,20);
-
-  
   award1 = new Treat(random(10,width),random(ypos))
+
+  //for all
+  scoreboard1 = new ScoreBoard(mg1);
+  scoreboard2 = new ScoreBoard(mg2);
+  scoreboard3 = new ScoreBoard(mg3);
+  scoreboard4 = new ScoreBoard(mg4);
 
   
 
@@ -281,6 +292,7 @@ class Cat {
   }
 
   detectMinigame(mg) {
+    
     if (
       this.x >= mg.x + 50 &&
       this.x <= mg.x + (mg.s - 50) &&
@@ -385,46 +397,13 @@ class Award {
     //text(dis,10,10)
     if (dis < 25) {
       this.x = random(100, 1000);
-      this.y = random(ypos)
+      //this.y = random(ypos)
       mg1Points += 1;
     }
   }
 }
 
-class Treat {
-    constructor(x, y) {
-      this.x = x;
-      this.y = y;
-    }
-  
-    display() {
-      fill(color(0, 200, 0));
-      ellipse(this.x, this.y, 20, 20);
-    }
-  
-    detectCollisionWithPlayer(cat) {
-      let dis = dist(cat.x, cat.y, this.x, this.y);
-      //text(dis,10,10)
-      if (dis < 25) {
-        this.x = random(100, 1000);
-        this.y = random(ypos)
-        mg4Points += 2;
-      }
-    }
 
-    detectCollisionMouse(mouse){
-        let dis = dist(mouse.x, mouse.y, this.x, this.y);
-      //text(dis,10,10)
-      if (dis < 25) {
-        this.x = random(100, 1000);
-        this.y = random(ypos)
-      }
-
-
-    }
-
-
-  }
 
 /*
 game 2 classes
@@ -489,8 +468,8 @@ class Mouse {
 
   detectCat(cat){
     let dis = dist(cat.x,cat.y,this.x,this.y)
-    if( dis < 100){
-        cat.y = 1200
+    if( dis < 80){
+        cat.y = 1170
         mg4Points -= 5
     }
     
@@ -550,33 +529,132 @@ class Enemy{
 
 }
 
-function one() {
-  if (mg1Points <= -10 || mg1Points >= 10) {
-    mg1.points = mg1Points;
+/*
+game 4
+*/
+class Treat {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+
+  display() {
+    fill(color(0, 200, 0));
+    ellipse(this.x, this.y, 20, 20);
+  }
+
+  detectCollisionWithPlayer(cat) {
+    let dis = dist(cat.x, cat.y, this.x, this.y);
+    //text(dis,10,10)
+    if (dis < 25) {
+      this.x = random(100, 1000);
+      this.y = random(ypos)
+      mg4Points += 2;
+    }
+  }
+
+  detectCollisionMouse(mouse){
+      let dis = dist(mouse.x, mouse.y, this.x, this.y);
+    //text(dis,10,10)
+    if (dis < 25) {
+      this.x = random(100, 1000);
+      this.y = random(ypos)
+    }
+
+
+  }
+
+
+}
+
+
+/*
+logistics
+
+*/
+
+class ScoreBoard{
+  constructor(mg){
+    //show score
+    this.mg = mg
+    this.txtX = 250
+    this.txtY = 350
+    this.exitX = 300
+    this.exitY = 550
+    this.retryX = 800
+    this.retryY = 550
+  }
+
+  display(){
+    noStroke()
     rectMode(CENTER)
+    textSize(30)
+    fill("black")
+    text("You have won " + this.mg.points + " points for this game!",300,350)
+    
     fill("orange");
-    rect(350, 550, 150, 150);
+    rect(this.exitX, this.exitY, 150, 150);
     fill("white");
     textSize(25);
-    text("Exit", 335, 570);
+    text("Exit", this.exitX-15, this.exitY +10);
 
-    if (dist(350, 550, mouseX, mouseY) < 20 && mouseIsPressed) {
+    if (dist(this.exitX, this.exitY, mouseX, mouseY) < 20){
+      fill("green");
+      rect(this.exitX, this.exitY, 150, 150);
+      fill("white");
+      textSize(25);
+      text("Exit", this.exitX-15, this.exitY +10);
+
+    }
+
+    if (dist(this.exitX, this.exitY, mouseX, mouseY) < 20 && mouseIsPressed) {
       cat.x = width / 2;
       cat.y = height / 2;
       gameState = 0;
     }
 
-    
-    fill("green");
-    rect(850, 550, 150, 150);
+    fill("orange");
+    rect(this.retryX, this.retryY, 150, 150);
     fill("white");
     textSize(25);
-    text("Try Again", 800, 570);
-    if (dist(850, 550, mouseX, mouseY) < 20 && mouseIsPressed) {
-      resetMg1();
+    text("Try Again", this.retryX - 50, this.retryY - 8);
+
+    if (dist(this.retryX, this.retryY, mouseX, mouseY) < 20 ){
+
+      fill("green");
+      rect(this.retryX, this.retryY, 150, 150);
+      fill("white");
+      textSize(25);
+      text("Try Again", this.retryX - 50, this.retryY - 8);
+
     }
 
-    //gameState = 0
+    if (dist(this.retryX, this.retryY, mouseX, mouseY) < 20 && mouseIsPressed) {
+      if(this.mg.txt === "Game 1"){
+        resetMg1()
+      }
+      if(this.mg.txt === "Game 2"){
+        resetMg2()
+      }
+      if(this.mg.txt === "Game 3"){
+        resetMg3()
+      }
+      if(this.mg.txt === "Game 4"){
+        resetMg4()
+      }
+    }
+
+
+  }
+}
+
+
+
+function one() {
+  if (mg1Points <= -10 || mg1Points >= 10) {
+    mg1.points = mg1Points;
+    scoreboard1.display()
+    
   } else {
     background("pink");
     noStroke();
@@ -660,8 +738,8 @@ function two() {
     hole6.display();
 
 
-    mouse.display()
-    mouse.detectMouse()
+    mouse2.display()
+    mouse2.detectMouse()
 
 
     fill("black")
@@ -684,31 +762,7 @@ function two() {
 
     mg2.points = mg2Points
 
-    noStroke()
-    rectMode(CENTER)
-    fill("black")
-    text("You have won " + mg2Points + " points for this game!",450,350)
-    fill("orange");
-    rect(350, 550, 150, 150);
-    fill("white");
-    textSize(25);
-    text("Exit", 335, 570);
-
-    if (dist(350, 550, mouseX, mouseY) < 20 && mouseIsPressed) {
-      cat.x = width / 2;
-      cat.y = height / 2;
-      gameState = 0;
-    }
-
-    fill("green");
-    rect(850, 550, 150, 150);
-    fill("white");
-    textSize(25);
-    text("Try Again", 800, 570);
-
-    if (dist(850, 550, mouseX, mouseY) < 20 && mouseIsPressed) {
-        resetMg2();
-    }
+    scoreboard2.display()
 
   }
  
@@ -722,33 +776,7 @@ function three() {
     mg3Points = 0
     mg3.points = mg3Points
 
-    noStroke()
-    rectMode(CENTER)
-    fill("black")
-    text("You have won " + mg3Points + " points for this game!",450,350)
-    fill("orange");
-    rect(350, 550, 150, 150);
-    fill("white");
-    textSize(25);
-    text("Exit", 335, 570);
-
-    if (dist(350, 550, mouseX, mouseY) < 20 && mouseIsPressed) {
-      cat.x = width / 2;
-      cat.y = height / 2;
-      gameState = 0;
-    }
-
-    fill("green");
-    rect(850, 550, 150, 150);
-    fill("white");
-    textSize(25);
-    text("Try Again", 800, 570);
-
-    if (dist(850, 550, mouseX, mouseY) < 20 && mouseIsPressed) {
-        fill("green")
-        rect(20,20,50,50)
-        resetMg3();
-    }
+    scoreboard3.display()
 
   }
 
@@ -809,33 +837,7 @@ function four() {
 
   if(mg4Points >= 10 || mg4Points < -10){
     mg4.points = mg4Points
-    noStroke()
-    rectMode(CENTER)
-    fill("black")
-    text("You have won " + mg4Points + " points for this game!",450,350)
-    fill("orange");
-    rect(350, 550, 150, 150);
-    fill("white");
-    textSize(25);
-    text("Exit", 335, 570);
-
-    if (dist(350, 550, mouseX, mouseY) < 20 && mouseIsPressed) {
-      cat.x = width / 2;
-      cat.y = height / 2;
-      gameState = 0;
-    }
-
-    fill("green");
-    rect(850, 550, 150, 150);
-    fill("white");
-    textSize(25);
-    text("Try Again", 800, 570);
-
-    if (dist(850, 550, mouseX, mouseY) < 20 && mouseIsPressed) {
-        fill("green")
-        rect(20,20,50,50)
-        resetMg4();
-    }
+    scoreboard4.display()
 
   }else{
         fill(128)
@@ -868,13 +870,7 @@ function four() {
 
 
   }
-  
-  
-  
 
-
-
-  
 }
 
 
@@ -898,12 +894,17 @@ function resetMg1() {
 function resetMg2(){
     mg2Points = 0
     clicks = 0;
-    timer = 5
+    timer = 30
 }
 
 function resetMg3(){
     mg3Points = 0
-    timer2 = 120
+    timer2 = 60
+
+    while(enemyArr.length > 10){
+      enemyArr.pop()
+    }
+    
     while(enemyArr.length < 10){
         enemyArr.push(new Enemy(random(10,100), random(10,100)))
     }
@@ -911,5 +912,5 @@ function resetMg3(){
 
 function resetMg4(){
     mg4Points = 0;
-    cat4.y = 1225
+    cat4.y = 1170
 }
