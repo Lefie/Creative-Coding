@@ -17,6 +17,17 @@ let cat4
 let catIdle;
 let catAttack;
 let catRun;
+let catIdlev2
+let catAttackv2
+let catRunv2
+let catWalkv2
+let catWalkv3
+let catWalkv4
+
+
+let cats1 = []
+let cats2 = []
+let cats3 = []
 
 let mg1;
 let mg2;
@@ -73,6 +84,7 @@ let mouseImg;
 
 let mousePosX = [170, 670];
 let mousePosY = [540, 240, 840];
+let clicked = false
 let mouse2
 let timer = 30
 let clicks = 0
@@ -96,8 +108,13 @@ function preload() {
   catIdle = loadImage("img/cat03_idle_blink_8fps.gif");
   catRun = loadImage("img/cat03_run_12fps.gif");
   catAttack = loadImage("img/cat03_attack_12fps.gif")
+  catWalkv2 = loadImage("img/cat04_walk_8fps.gif")
+  catWalkv3 = loadImage("img/cat02_walk_8fps.gif")
+  catWalkv4 = loadImage("img/cat05_walk_8fps.gif")
   mouseImg = loadImage("img/mouse.png");
   enemyImg = loadImage("img/slime_black_idle_down.gif")
+  
+
 }
 
 function setup() {
@@ -153,12 +170,18 @@ function setup() {
   btn2 = new Instruction(mg2.x + 90, mg2.y - 40, mg2)
   btn3 = new Instruction(mg3.x + 90, mg3.y - 40, mg3)
   btn4 = new Instruction(mg4.x + 90, mg4.y - 40, mg4)
+
+  
+
   
 }
 
 function draw() {
   background("pink");
   //text("cat pos x : " + cat.x + " cat pos y: " + cat.y, 15,15)
+  score = mg1.points + mg2.points + mg3.points + mg4.points
+  text("score: "+score, 100,50)
+
   if (gameState === 0) {
     // the default map
     console.log("got here");
@@ -169,6 +192,39 @@ function draw() {
     mg4.display();
     cat.display();
     cat.move();
+
+    if(score >= 20){
+    
+      if(keyIsPressed && key == "a"){
+       let temp = new Cat(mouseX, mouseY)
+       cats1.push(temp)
+      }
+     }else if(score >= 15){
+
+      if(keyIsPressed && key == "b"){
+        let temp = new Cat(mouseX, mouseY)
+        cats2.push(temp)
+       }
+     }else if(score >= 10) {
+      if(keyIsPressed && key == "c"){
+        let temp = new Cat(mouseX, mouseY)
+        cats3.push(temp)
+       }
+
+     }
+   
+     for(let i = 0; i < cats1.length; i++){
+       cats1[i].move4()
+     }
+     
+     for(let i = 0; i < cats2.length; i++){
+      cats2[i].move5()
+    }
+    
+    for(let i = 0; i < cats3.length; i++){
+      cats3[i].move6()
+    }
+    
 
     /*
     instruction for game 1
@@ -314,15 +370,15 @@ function draw() {
   if (gameState === 4) {
     four();
   }
+
+  
+
+  
+   
+    
+  
 }
 
-//function 1: mini game 1
-
-// function 2: mini game 2
-
-//function 3 : mini game 3
-
-//function 4 : mini game 4
 
 /*
  cat oop
@@ -337,6 +393,8 @@ class Cat {
     this.speed = 5;
     this.jumpMode = false;
     this.jumpPower = 0;
+    this.desiredX = random(100,900)
+    this.desiredY = random(100,900)
   }
 
   display() {
@@ -392,6 +450,78 @@ class Cat {
     
     )
    
+  }
+
+  move4(){
+    this.graphic = catWalkv2
+    image(this.graphic,this.x,this.y,100,100)
+    if(this.x < this.desiredX){
+      this.x += 0.4
+    }
+    if(this.x > this.desiredX){
+      this.x -= 0.4
+    }
+
+    if(this.y < this.desiredY){
+      this.y += 0.4
+    }
+
+    if(this.y > this.desiredY){
+      this.y -= 0.4
+    }
+
+    if(dist(this.x,this.y,this.desiredX,this.desiredY) < 10){
+      this.desiredX = random(100,900)
+      this.desiredY = random(100,900)
+    }
+  }
+
+  move5(){
+    this.graphic = catWalkv3
+    image(this.graphic,this.x,this.y,100,100)
+    if(this.x < this.desiredX){
+      this.x += 0.4
+    }
+    if(this.x > this.desiredX){
+      this.x -= 0.4
+    }
+
+    if(this.y < this.desiredY){
+      this.y += 0.4
+    }
+
+    if(this.y > this.desiredY){
+      this.y -= 0.4
+    }
+
+    if(dist(this.x,this.y,this.desiredX,this.desiredY) < 10){
+      this.desiredX = random(100,900)
+      this.desiredY = random(100,900)
+    }
+  }
+
+  move6(){
+    this.graphic = catWalkv4
+    image(this.graphic,this.x,this.y,100,100)
+    if(this.x < this.desiredX){
+      this.x += 0.4
+    }
+    if(this.x > this.desiredX){
+      this.x -= 0.4
+    }
+
+    if(this.y < this.desiredY){
+      this.y += 0.4
+    }
+
+    if(this.y > this.desiredY){
+      this.y -= 0.4
+    }
+
+    if(dist(this.x,this.y,this.desiredX,this.desiredY) < 10){
+      this.desiredX = random(100,900)
+      this.desiredY = random(100,900)
+    }
   }
 
   detectEnemy(){
@@ -572,6 +702,9 @@ class Mouse {
     this.x = x;
     this.y = y;
     this.graphic = mouseImg;
+    this.time = int(random(50,100))
+    this.num = 0
+    
    
   }
 
@@ -582,20 +715,44 @@ class Mouse {
 
   detectMouse() {
     stroke(128)
-  
-    //line(mouseX, mouseY, this.x, this.y);
-    //ellipse(mouseX,mouseY,10,10)
-    fill("black")
-    let dis = dist(mouseX, mouseY, this.x, this.y);
-    textSize(50)
-    text("clicks: " + clicks, 50, 60);
-    
-    if(dis < 30 && mouseIsPressed){
-        
+    this.num += 1
+
+    if(this.num >= this.time){
+      
         this.x = random(mousePosX) + 90
         this.y = random(mousePosY) + 50
+        this.num = 0
+        this.time = int(random(50,100))
+    }
+  
+    //line(mouseX, mouseY, this.x, this.y);
+    ellipse(mouseX ,mouseY,10,10)
+    fill("pink")
+    ellipse(this.x +15,this.y +15,20,20)
+    
+    
+    fill("black")
+    let dis = dist(mouseX, mouseY, this.x + 15, this.y + 15);
+    text(dis,100,100)
+    textSize(50)
+    text("clicks: " + clicks, 50, 60);
+
+    if(dis < 20 ){
+      fill("green")
+      ellipse(this.x + 15,this.y + 15,20,20)
+    }
+    
+    if(dis < 20 && mouseIsPressed && !clicked){
         clicks += 1
+        clicked = true
+       
+        this.x = random(mousePosX) + 90
+        this.y = random(mousePosY) + 50
+
         
+        
+    }else {
+      clicked = false
     }
   }
 
@@ -862,6 +1019,7 @@ class Instruction{
   }
 
   displayBtn(){
+    noStroke()
     textSize(20)
     noStroke()
     rectMode(CENTER)
@@ -882,6 +1040,7 @@ class Instruction{
   }
 
   displayInstruction(){
+    noStroke()
     rectMode(CENTER)
     fill("white")
     rect(this.instructionX,this.instructionY,500,300)
@@ -1060,6 +1219,8 @@ function two() {
 function three() {
   background("pink");
 
+  //if timer has run out but there are still enemies left or if all enemies are elimnated but there's still time
+  //end game and display score
   if((timer2 === 0 && enemyArr.length != 0) || (enemyArr.length === 0 && timer2 > 0)){
     
     mg3.points = mg3Points
