@@ -181,6 +181,9 @@ function draw() {
   //text("cat pos x : " + cat.x + " cat pos y: " + cat.y, 15,15)
   score = mg1.points + mg2.points + mg3.points + mg4.points
   text("score: "+score, 100,50)
+  text("If you have a score > 30, press 'c' ",350,70)
+  text("If you have a score > 60, press 'b' ",350,90)
+  text("If you have a score > 90, press 'a' ",350,110)
 
   if (gameState === 0) {
     // the default map
@@ -193,19 +196,20 @@ function draw() {
     cat.display();
     cat.move();
 
-    if(score >= 20){
+    if(score >= 90){
+      
     
       if(keyIsPressed && key == "a"){
        let temp = new Cat(mouseX, mouseY)
        cats1.push(temp)
       }
-     }else if(score >= 15){
+     }else if(score >= 60){
 
       if(keyIsPressed && key == "b"){
         let temp = new Cat(mouseX, mouseY)
         cats2.push(temp)
        }
-     }else if(score >= 10) {
+     }else if(score >= 30) {
       if(keyIsPressed && key == "c"){
         let temp = new Cat(mouseX, mouseY)
         cats3.push(temp)
@@ -961,6 +965,7 @@ class Exit{
   }
 
   display(){
+    noStroke()
     fill("white")
     rectMode(CENTER)
     rect(this.x, this.y,this.w, this.h)
@@ -971,6 +976,7 @@ class Exit{
   }
 
   detectClickOnExit(){
+    noStroke()
     //text(dist(this.x,this.y, mouseX,mouseY),100,150)
     let dis = dist(this.x,this.y, mouseX,mouseY)
     if(dis < 20){
@@ -984,7 +990,7 @@ class Exit{
     }
 
     if (dis < 20 && mouseIsPressed){
-      fill("yellow")
+      noStroke()
       rectMode(CENTER)
       rect(this.x, this.y,this.w, this.h)
       fill("black")
@@ -993,10 +999,10 @@ class Exit{
       cat.x = width / 2;
       cat.y = height / 2;
     }
-
   }
 
   displayOptions(){
+    noStroke()
     rectMode(CENTER)
     fill("white")
     rect(500,500,100,100)
